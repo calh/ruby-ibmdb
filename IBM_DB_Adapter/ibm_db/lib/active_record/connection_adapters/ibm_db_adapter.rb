@@ -43,11 +43,11 @@ module ActiveRecord
         tuple[1] = conn.substitute_at(binds[i][0], i)
       end
 
-      if values.empty? # empty insert
-        im.values = Arel.sql(connection.empty_insert_statement_value(klass.primary_key))
-      else
-        im.insert substitutes
-      end
+			if values.empty? # empty insert
+				im.values = Arel.sql(connection.empty_insert_statement_value)
+			else
+				im.insert substitutes
+			end
 
       conn.insert(
         im,
