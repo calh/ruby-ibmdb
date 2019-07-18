@@ -90,9 +90,8 @@ module ActiveRecord
 
 			substitutes, binds = substitute_values values
 
-
 			if values.empty? # empty insert
-				im.values = Arel.sql(connection.empty_insert_statement_value(klass.primary_key))
+				im.values = Arel.sql(connection.empty_insert_statement_value)
 			else
 				im.insert substitutes
 			end
