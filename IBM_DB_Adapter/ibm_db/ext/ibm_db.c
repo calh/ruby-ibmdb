@@ -2540,8 +2540,9 @@ static VALUE _ruby_ibm_db_connect_helper( int argc, VALUE *argv, int isPersisten
   /* Call the function where the actual logic is being run*/
   #ifdef UNICODE_SUPPORT_VERSION
 	
-	ibm_Ruby_Thread_Call ( (void *)_ruby_ibm_db_connect_helper2, helper_args, (void *)_ruby_ibm_db_Connection_level_UBF, NULL);	
+	//ibm_Ruby_Thread_Call ( (void *)_ruby_ibm_db_connect_helper2, helper_args, (void *)_ruby_ibm_db_Connection_level_UBF, NULL);	
 	
+    _ruby_ibm_db_connect_helper2( helper_args );
 				
     conn_res = helper_args->conn_res;
 	
