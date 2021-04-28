@@ -1623,75 +1623,75 @@ module ActiveRecord
       end
       # Properly quotes the various data types.
       # +value+ contains the data, +column+ is optional and contains info on the field
-    #   def quote(value, column=nil)
-    #     return value.quoted_id if value.respond_to?(:quoted_id)
-	  #     case value
-    #       # If it's a numeric value and the column sql_type is not a string, it shouldn't be quoted
-    #       # (IBM_DB doesn't accept quotes on numeric types)
-    #       when Numeric
-    #         # If the column sql_type is text or string, return the quote value
-    #         if (column && ( column.sql_type.to_s =~ /text|char/i ))
-    #           unless caller[0] =~ /insert_fixture/i
-		#           "'#{value}'"
-    #           else
-    #               "#{value}"
-    #           end 
-    #         else
-    #           # value is Numeric, column.sql_type is not a string,
-    #           # therefore it converts the number to string without quoting it
-		#     value.to_s
-    #         end
-    #       when String, ActiveSupport::Multibyte::Chars
-    #       if column && column.sql_type.to_s =~ /binary|blob/i && !(column.sql_type.to_s =~ /for bit data/i)				
-    #         # If quoting is required for the insert/update of a BLOB
-    #           unless caller[0] =~ /add_column_options/i
-    #              # Invokes a convertion from string to binary
-    #             @servertype.set_binary_value
-    #           else
-    #             # Quoting required for the default value of a column				
-    #             @servertype.set_binary_default(value)
-    #           end
-    #       elsif column && column.sql_type.to_s =~ /text|clob/i
-    #           unless caller[0] =~ /add_column_options/i
-    #             @servertype.set_text_default(quote_string(value))
-    #           else
-    #             @servertype.set_text_default(quote_string(value))
-    #           end
-    #       elsif column && column.sql_type.to_s =~ /xml/i
-    #           unless caller[0] =~ /add_column_options/i
-    #             "#{value}"
-    #           else
-    #             "#{value}"
-    #           end
-    #       else
-    #           unless caller[0] =~ /insert_fixture/i
-    #             super(value) 
-    #           else
-    #             "#{value}"
-    #           end 
-    #       end
-    #       #when TrueClass then quoted_true    # return '1' for true
-	  # when TrueClass 
-		#   quoted_true
-    #       #when FalseClass then quoted_false  # return '0' for false
-	  # when FalseClass
-		#   quoted_false
-    #       when nil
-		#   "NULL"
-    #       when Date
-		#   "'#{quoted_date(value)}'"
-	  # when Time
-		#   "'#{quoted_date(value)}'"
-    #       when Symbol
-		#   "'#{quote_string(value)}'"
-    #       else
-    #         unless caller[0] =~ /insert_fixture/i
-    #           "'#{quote_string(YAML.dump(value))}'"
-    #         else
-    #           "#{quote_string(YAML.dump(value))}"
-    #         end
-    #     end
-    #   end
+      def quote(value, column=nil)
+        return value.quoted_id if value.respond_to?(:quoted_id)
+        case value
+          # If it's a numeric value and the column sql_type is not a string, it shouldn't be quoted
+          # (IBM_DB doesn't accept quotes on numeric types)
+        when Numeric
+          # If the column sql_type is text or string, return the quote value
+          if (column && ( column.sql_type.to_s =~ /text|char/i ))
+            unless caller[0] =~ /insert_fixture/i
+              "'#{value}'"
+            else
+              "#{value}"
+            end 
+          else
+            # value is Numeric, column.sql_type is not a string,
+            # therefore it converts the number to string without quoting it
+            value.to_s
+          end
+        when String, ActiveSupport::Multibyte::Chars
+          if column && column.sql_type.to_s =~ /binary|blob/i && !(column.sql_type.to_s =~ /for bit data/i)				
+            # If quoting is required for the insert/update of a BLOB
+            unless caller[0] =~ /add_column_options/i
+              # Invokes a convertion from string to binary
+              @servertype.set_binary_value
+            else
+              # Quoting required for the default value of a column				
+              @servertype.set_binary_default(value)
+            end
+          elsif column && column.sql_type.to_s =~ /text|clob/i
+            unless caller[0] =~ /add_column_options/i
+              @servertype.set_text_default(quote_string(value))
+            else
+              @servertype.set_text_default(quote_string(value))
+            end
+          elsif column && column.sql_type.to_s =~ /xml/i
+            unless caller[0] =~ /add_column_options/i
+              "#{value}"
+            else
+              "#{value}"
+            end
+          else
+            unless caller[0] =~ /insert_fixture/i
+              super(value) 
+            else
+              "#{value}"
+            end 
+          end
+          #when TrueClass then quoted_true    # return '1' for true
+        when TrueClass 
+          quoted_true
+          #when FalseClass then quoted_false  # return '0' for false
+        when FalseClass
+          quoted_false
+        when nil
+          "NULL"
+        when Date
+          "'#{quoted_date(value)}'"
+        when Time
+          "'#{quoted_date(value)}'"
+        when Symbol
+          "'#{quote_string(value)}'"
+        else
+          unless caller[0] =~ /insert_fixture/i
+            "'#{quote_string(YAML.dump(value))}'"
+          else
+            "#{quote_string(YAML.dump(value))}"
+          end
+        end
+      end
       # # Quotes a given string, escaping single quote (') characters.
       # def quote_string(string)
       #     #string.gsub(/'/, "''")
